@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Cochlear</string>
+    <string name="patient_control">Patient Control</string>
+    <string name="clinical_setting">Clinical Settings</string>
+    <string name="sync_on_off">Bilateral Sync ON/OFF </string>
+    <string name="volume">Volume</string>
+    <string name="clinical_defaults">Clinical Defaults</string>
+    <string name="_0">0</string>
+</resources>

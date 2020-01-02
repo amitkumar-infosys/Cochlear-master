@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/patient_control">
+
+    <fragment
+        android:id="@+id/patient_control"
+        android:name="com.example.cochlear.ui.patient.PatientFragment"
+        android:label="@string/patient_control"
+        tools:layout="@layout/fragment_patient_control" />
+
+    <fragment
+        android:id="@+id/clinical_setting"
+        android:name="com.example.cochlear.ui.clinical.ClinicalFragment"
+        android:label="@string/clinical_setting"
+        tools:layout="@layout/fragment_clinical_setting" />
+</navigation>
