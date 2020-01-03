@@ -2,8 +2,15 @@
     <string name="app_name">Cochlear</string>
     <string name="patient_control">Patient Control</string>
     <string name="clinical_setting">Clinical Settings</string>
-    <string name="sync_on_off">Bilateral Sync ON/OFF </string>
+    <string name="sync_on_off">Bilateral Sync</string>
     <string name="volume">Volume</string>
     <string name="clinical_defaults">Clinical Defaults</string>
     <string name="_0">0</string>
+    <string name="_10">10</string>
+    <string name="increase_left_ear_volume">Increase Left Ear volume</string>
+    <string name="increase_right_ear_volume">Increase Left Ear volume</string>
+    <string name="decrease_left_ear_volume">decrease right ear volume</string>
+    <string name="decrease_right_ear_volume">decrease right ear volume</string>
+    <string name="increase_synced_volume">increase synced volume</string>
+    <string name="decrease_synced_volume">decrease synced volume</string>
 </resources>

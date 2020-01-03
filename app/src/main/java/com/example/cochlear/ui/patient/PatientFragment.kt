@@ -7,10 +7,8 @@ import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.example.cochlear.MainActivity
 import com.example.cochlear.R
-import com.example.cochlear.ui.Constants
 import com.example.cochlear.ui.Constants.Companion.SYNCED
 import com.example.cochlear.ui.Constants.Companion.VOL_LEFT_CLINIC
 import com.example.cochlear.ui.Constants.Companion.VOL_LEFT_PATIENT
@@ -19,82 +17,83 @@ import com.example.cochlear.ui.Constants.Companion.VOL_RIGHT_PATIENT
 import kotlinx.android.synthetic.main.fragment_patient_control.*
 
 class PatientFragment : Fragment() {
-    private var leftVolumePatient = 0
-    private var leftVolumeClinic = 0
-    private var rightVolumePatient = 0
-    private var rightVolumeClinic = 0
+    private var leftVolume = 0
+    private var clinicLeftVolume = 0
+    private var rightVolume = 0
+    private var clinicRightVolume = 0
     private var synced = false
-
-    private lateinit var patientViewModel: PatientViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        patientViewModel =
-            ViewModelProviders.of(this).get(PatientViewModel::class.java)
         return inflater.inflate(R.layout.fragment_patient_control, container, false)
 
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        // these methods are called every time activity is created/started
         getData()
         checkSyncedStatus()
         setLeftVolumeData()
         setRightVolumeData()
 
-        right_vol_down.setOnClickListener {
-            if (rightVolumePatient > 1) {
-                rightVolumePatient--
+        //SetOnClickListeners will listen and respond to corresponding button clicks.
+        left_vol_up.setOnClickListener {
+            if (leftVolume < 10) {
+                leftVolume++
             }
-            (activity as MainActivity).saveInt(Constants.VOL_RIGHT_PATIENT, rightVolumePatient)
-            setRightVolumeData()
-        }
-
-        right_vol_up.setOnClickListener {
-            if (rightVolumePatient < 10) {
-                rightVolumePatient++
-            }
-            (activity as MainActivity).saveInt(Constants.VOL_RIGHT_PATIENT, rightVolumePatient)
-            setRightVolumeData()
+            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolume)
+            setLeftVolumeData()
         }
 
         left_vol_down.setOnClickListener {
-            if (leftVolumePatient > 1) {
-                leftVolumePatient--
+            if (leftVolume > 1) {
+                leftVolume--
             }
-            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolumePatient)
+            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolume)
             setLeftVolumeData()
         }
 
-        left_vol_up.setOnClickListener {
-            if (leftVolumePatient < 10) {
-                leftVolumePatient++
+        right_vol_up.setOnClickListener {
+            if (rightVolume < 10) {
+                rightVolume++
             }
-            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolumePatient)
-            setLeftVolumeData()
+            (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolume)
+            setRightVolumeData()
         }
 
+        right_vol_down.setOnClickListener {
+            if (rightVolume > 1) {
+                rightVolume--
+            }
+            (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolume)
+            setRightVolumeData()
+        }
+
+        //this is center volume up button
         sync_vol_up.setOnClickListener {
-            if (leftVolumePatient < 10 && rightVolumePatient < 10) {
-                leftVolumePatient++
-                rightVolumePatient++
+            if (leftVolume < 10 && rightVolume < 10) {
+                leftVolume++
+                rightVolume++
             }
-            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolumePatient)
-            (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolumePatient)
+            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolume)
+            (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolume)
             setLeftVolumeData()
             setRightVolumeData()
         }
 
+        //this is center volume down button
         sync_vol_down.setOnClickListener {
-            if (leftVolumePatient > 1 && rightVolumePatient > 1) {
-                leftVolumePatient--
-                rightVolumePatient--
+            if (leftVolume > 1 && rightVolume > 1) {
+                leftVolume--
+                rightVolume--
             }
-            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolumePatient)
-            (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolumePatient)
+            (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolume)
+            (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolume)
             setLeftVolumeData()
             setRightVolumeData()
         }
@@ -107,15 +106,17 @@ class PatientFragment : Fragment() {
 
     }
 
+    // this method retrieves all the data from Shared Preferences and updates it to the current fragment's values.
     private fun getData() {
-        leftVolumePatient = (activity as MainActivity).getIntValue(VOL_LEFT_PATIENT)
-        rightVolumePatient = (activity as MainActivity).getIntValue(VOL_RIGHT_PATIENT)
-        rightVolumeClinic = (activity as MainActivity).getIntValue(VOL_RIGHT_CLINIC)
-        leftVolumeClinic = (activity as MainActivity).getIntValue(VOL_LEFT_CLINIC)
+        leftVolume = (activity as MainActivity).getIntValue(VOL_LEFT_PATIENT)
+        rightVolume = (activity as MainActivity).getIntValue(VOL_RIGHT_PATIENT)
+        clinicRightVolume = (activity as MainActivity).getIntValue(VOL_RIGHT_CLINIC)
+        clinicLeftVolume = (activity as MainActivity).getIntValue(VOL_LEFT_CLINIC)
         synced = (activity as MainActivity).getBoolean(SYNCED)
         sync_switch.isChecked = synced
     }
 
+    // this method checks the Bilateral Sync status.
     private fun checkSyncedStatus() {
         if (synced) {
             volume_button_left_pa.visibility = GONE
@@ -129,73 +130,99 @@ class PatientFragment : Fragment() {
         }
     }
 
+    // this method sets data for left Ear's volume data on UI
     private fun setLeftVolumeData() {
-        left_volume_pa.text = leftVolumePatient.toString()
-        clinic_left_value_pa.text = leftVolumeClinic.toString()
+        left_volume_pa.text = leftVolume.toString()
+        clinic_left_value_pa.text = clinicLeftVolume.toString()
         view_left_pa.layoutParams =
             LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 0,
-                leftVolumePatient.toFloat()
+                leftVolume.toFloat()
             )
         clinic_left_seperator_pa.layoutParams =
             LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 0,
-                leftVolumeClinic.toFloat()
+                clinicLeftVolume.toFloat()
             )
     }
 
+    // this method sets data for right Ear's volume data on UI
     private fun setRightVolumeData() {
-        right_volume_pa.text = rightVolumePatient.toString()
-        clinic_right_value_pa.text = rightVolumeClinic.toString()
+        right_volume_pa.text = rightVolume.toString()
+        clinic_right_value_pa.text = clinicRightVolume.toString()
         view_right_pa.layoutParams =
             LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 0,
-                rightVolumePatient.toFloat()
+                rightVolume.toFloat()
             )
         clinic_right_seperator_pa.layoutParams =
             LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 0,
-                rightVolumeClinic.toFloat()
+                clinicRightVolume.toFloat()
             )
     }
 
-
+    // this method is to calculate the delta between clinical and patient values.
     private fun calculateDelta() {
-        val deltaLeft = leftVolumePatient - leftVolumeClinic
-        val deltaRight = rightVolumePatient - rightVolumeClinic
-        // if deltaleft smaller than delta right
-        if (deltaLeft.compareTo(deltaRight) == -1) {
-            rightVolumePatient = leftVolumePatient + (rightVolumeClinic - leftVolumeClinic)
-            if (rightVolumePatient < 1) {
-                val deltaToIncrement = 1 - rightVolumePatient
-                rightVolumePatient = rightVolumePatient + deltaToIncrement
-                leftVolumePatient = leftVolumePatient + deltaToIncrement
-            } else if (rightVolumePatient > 10) {
-                val deltaToDecrement = rightVolumePatient - 10
-                rightVolumePatient = rightVolumePatient - deltaToDecrement
-                leftVolumePatient = leftVolumePatient - deltaToDecrement
-            }
 
-        }// if deltaleft greater than delta right
+        //delta here is calculated by deducting clinic setting value from patient volume.
+        val deltaLeft = leftVolume - clinicLeftVolume
+        val deltaRight = rightVolume - clinicRightVolume
+
+        //Logic here is:
+        // {other side patient volume = reference side patient volume + (other side patient volume - reference side clinic volume)}
+        // reference volume = smaller size delta's volume
+
+        // if delta left smaller than delta right
+        if (deltaLeft.compareTo(deltaRight) == -1) {
+            //reference volume here is leftVolume
+            rightVolume = leftVolume + (clinicRightVolume - clinicLeftVolume)
+
+            //here we adjust the negative patient volume by incrementing both side patient volumes by the difference between
+            // minimum permissible volume and actual patient volume.
+            if (rightVolume < 1) {
+                val deltaToIncrement = 1 - rightVolume
+                rightVolume += deltaToIncrement
+                leftVolume += deltaToIncrement
+            }
+            //here we adjust the excessive patient volume by incrementing both side patient volumes by the difference between
+            // actual patient volume and maximum permissible volume.
+            else if (rightVolume > 10) {
+                val deltaToDecrement = rightVolume - 10
+                rightVolume -= deltaToDecrement
+                leftVolume -= deltaToDecrement
+            }
+        }
+        // if delta left greater than delta right
         else if (deltaLeft.compareTo(deltaRight) == 1) {
-            leftVolumePatient = rightVolumePatient + (leftVolumeClinic - rightVolumeClinic)
-            if (leftVolumePatient < 1) {
-                val deltaToIncrement = 1 - leftVolumePatient
-                rightVolumePatient = rightVolumePatient + deltaToIncrement
-                leftVolumePatient = leftVolumePatient + deltaToIncrement
-            } else if (leftVolumePatient > 10) {
-                val deltaToDecrement = leftVolumePatient - 10
-                rightVolumePatient = rightVolumePatient - deltaToDecrement
-                leftVolumePatient = leftVolumePatient - deltaToDecrement
+            //reference volume here is RightVolumePatient
+            leftVolume = rightVolume + (clinicLeftVolume - clinicRightVolume)
+            //here we adjust the negative patient volume by incrementing both side patient volumes by the difference between
+            // minimum permissible volume and actual patient volume.
+            if (leftVolume < 1) {
+                val deltaToIncrement = 1 - leftVolume
+                rightVolume += deltaToIncrement
+                leftVolume += deltaToIncrement
+
+            }
+            //here we adjust the excessive patient volume by incrementing both side patient volumes by the difference between
+            // actual patient volume and maximum permissible volume.
+            else if (leftVolume > 10) {
+                val deltaToDecrement = leftVolume - 10
+                rightVolume -= deltaToDecrement
+                leftVolume -= deltaToDecrement
             }
         }
 
-        (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolumePatient)
-        (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolumePatient)
+        //saving patient volumes in Shared preferences before updating them on UI
+        (activity as MainActivity).saveInt(VOL_LEFT_PATIENT, leftVolume)
+        (activity as MainActivity).saveInt(VOL_RIGHT_PATIENT, rightVolume)
+
+        //updating new values on UI
         setLeftVolumeData()
         setRightVolumeData()
     }

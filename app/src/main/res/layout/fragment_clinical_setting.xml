@@ -43,9 +43,9 @@
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/circle"
                         android:gravity="center"
-                        android:text="10"
+                        android:text="@string/_10"
                         android:textColor="@color/white"
-                        android:textSize="13sp"></TextView>
+                        android:textSize="13sp" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -62,20 +62,18 @@
                 <ImageButton
                     android:id="@+id/left_vol_up"
                     android:layout_width="match_parent"
+                    android:contentDescription="@string/increase_left_ear_volume"
                     android:layout_height="80dp"
                     android:background="@android:color/transparent"
-                    android:onClick="volumeLeftUpClick"
-                    android:src="@drawable/ic_add_black_24dp">
-
-                </ImageButton>
+                    android:src="@drawable/ic_add_black_24dp" />
 
                 <ImageButton
                     android:id="@+id/left_vol_down"
                     android:layout_width="match_parent"
+                    android:contentDescription="@string/decrease_left_ear_volume"
                     android:layout_height="80dp"
                     android:background="@android:color/transparent"
-                    android:onClick="volumeLeftDownClick"
-                    android:src="@drawable/ic_remove_black_24dp"></ImageButton>
+                    android:src="@drawable/ic_remove_black_24dp" />
 
             </LinearLayout>
 
@@ -120,7 +118,7 @@
                         android:layout_marginRight="20dp"
                         android:background="@drawable/circle"
                         android:gravity="center"
-                        android:text="10"
+                        android:text="@string/_10"
                         android:textColor="@color/white"
                         android:textSize="13sp">
 
@@ -146,8 +144,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:background="@android:color/transparent"
-                    android:onClick="volumeRightUpClick"
-                    android:src="@drawable/ic_add_black_24dp">
+                    android:src="@drawable/ic_add_black_24dp"
+                    android:contentDescription="@string/increase_right_ear_volume">
 
                 </ImageButton>
 
@@ -156,8 +154,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:background="@android:color/transparent"
-                    android:onClick="volumeRightDownClick"
-                    android:src="@drawable/ic_remove_black_24dp"></ImageButton>
+                    android:src="@drawable/ic_remove_black_24dp"
+                    android:contentDescription="@string/decrease_right_ear_volume" />
 
             </LinearLayout>
         </RelativeLayout>
